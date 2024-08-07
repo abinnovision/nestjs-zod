@@ -91,5 +91,6 @@
   },
   "dependencies": {
     "merge-deep": "^3.0.3"
-  }
+  },
+  "packageManager": "yarn@4.4.0"
 }
