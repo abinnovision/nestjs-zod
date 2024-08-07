@@ -1,6 +1,6 @@
 {
 	"name": "@abinnovision/nestjs-zod",
-	"version": "0.0.0-set-by-ci",
+	"version": "3.0.0",
 	"description": "All NestJS + Zod utilities you need",
 	"repository": {
 		"url": "https://github.com/abinnovision/nestjs-zod"
