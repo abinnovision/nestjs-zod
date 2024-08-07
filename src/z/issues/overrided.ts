@@ -1,4 +1,4 @@
-import { ZodIssueBase, ZodIssueCode } from 'zod'
+import type { ZodIssueBase, ZodIssueCode } from "zod";
 
 /*
  * If you add a new string to "Type" union,
@@ -7,25 +7,25 @@ import { ZodIssueBase, ZodIssueCode } from 'zod'
  */
 
 export type ZodMinMaxValueType =
-  | 'array'
-  | 'string'
-  | 'number'
-  | 'bigint'
-  | 'set'
-  | 'date_string_year'
-  | 'date'
-  | 'password'
+	| "array"
+	| "string"
+	| "number"
+	| "bigint"
+	| "set"
+	| "date_string_year"
+	| "date"
+	| "password";
 
 export interface ZodTooSmallIssue extends ZodIssueBase {
-  code: typeof ZodIssueCode.too_small
-  minimum: number | bigint
-  inclusive: boolean
-  type: ZodMinMaxValueType
+	code: typeof ZodIssueCode.too_small;
+	minimum: number | bigint;
+	inclusive: boolean;
+	type: ZodMinMaxValueType;
 }
 
 export interface ZodTooBigIssue extends ZodIssueBase {
-  code: typeof ZodIssueCode.too_big
-  maximum: number | bigint
-  inclusive: boolean
-  type: ZodMinMaxValueType
+	code: typeof ZodIssueCode.too_big;
+	maximum: number | bigint;
+	inclusive: boolean;
+	type: ZodMinMaxValueType;
 }

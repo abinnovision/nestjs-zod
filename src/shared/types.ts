@@ -1,1 +1,1 @@
-export type Source = 'body' | 'query' | 'params'
+export type Source = "body" | "query" | "params";

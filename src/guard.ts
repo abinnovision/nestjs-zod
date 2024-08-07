@@ -1,47 +1,45 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common'
-import { ZodDto } from './dto'
-import { ZodExceptionCreator } from './exception'
-import { Source } from './shared/types'
-import { validate } from './validate'
-import { ZodSchema } from './z'
+import { Injectable, UseGuards } from "@nestjs/common";
+
+import { validate } from "./validate";
+
+import type { ZodDto } from "./dto";
+import type { ZodExceptionCreator } from "./exception";
+import type { Source } from "./shared/types";
+import type { ZodSchema } from "./z";
+import type { CanActivate, ExecutionContext } from "@nestjs/common";
 
 interface ZodBodyGuardOptions {
-  createValidationException?: ZodExceptionCreator
+	createValidationException?: ZodExceptionCreator;
 }
 
 type ZodGuardClass = new (
-  source: Source,
-  schemaOrDto: ZodSchema | ZodDto
-) => CanActivate
+	source: Source,
+	schemaOrDto: ZodSchema | ZodDto
+) => CanActivate;
 
 export function createZodGuard({
-  createValidationException,
+	createValidationException,
 }: ZodBodyGuardOptions = {}): ZodGuardClass {
-  @Injectable()
-  class ZodGuard {
-    constructor(
-      private source: Source,
-      private schemaOrDto: ZodSchema | ZodDto
-    ) {}
+	@Injectable()
+	class ZodGuard {
+		public constructor(
+			private source: Source,
+			private schemaOrDto: ZodSchema | ZodDto
+		) {}
 
-    canActivate(context: ExecutionContext) {
-      const data = context.switchToHttp().getRequest()[this.source]
+		public canActivate(context: ExecutionContext) {
+			const data = context.switchToHttp().getRequest()[this.source];
 
-      validate(data, this.schemaOrDto, createValidationException)
+			validate(data, this.schemaOrDto, createValidationException);
 
-      return true
-    }
-  }
+			return true;
+		}
+	}
 
-  return ZodGuard
+	return ZodGuard;
 }
 
-export const ZodGuard = createZodGuard()
+export const ZodGuard = createZodGuard();
 
 export const UseZodGuard = (source: Source, schemaOrDto: ZodSchema | ZodDto) =>
-  UseGuards(new ZodGuard(source, schemaOrDto))
+	UseGuards(new ZodGuard(source, schemaOrDto));

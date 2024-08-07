@@ -1,39 +1,39 @@
-import { ZodIssueBase, ZodIssueCode } from 'zod'
+import type { ZodIssueBase, ZodIssueCode } from "zod";
 
 export interface ZodInvalidPasswordNoDigit extends ZodIssueBase {
-  code: typeof ZodIssueCode.custom
-  params: {
-    isNestJsZod: true
-    code: 'invalid_password_no_digit'
-  }
+	code: typeof ZodIssueCode.custom;
+	params: {
+		isNestJsZod: true;
+		code: "invalid_password_no_digit";
+	};
 }
 
 export interface ZodInvalidPasswordNoLowercase extends ZodIssueBase {
-  code: typeof ZodIssueCode.custom
-  params: {
-    isNestJsZod: true
-    code: 'invalid_password_no_lowercase'
-  }
+	code: typeof ZodIssueCode.custom;
+	params: {
+		isNestJsZod: true;
+		code: "invalid_password_no_lowercase";
+	};
 }
 
 export interface ZodInvalidPasswordNoUppercase extends ZodIssueBase {
-  code: typeof ZodIssueCode.custom
-  params: {
-    isNestJsZod: true
-    code: 'invalid_password_no_uppercase'
-  }
+	code: typeof ZodIssueCode.custom;
+	params: {
+		isNestJsZod: true;
+		code: "invalid_password_no_uppercase";
+	};
 }
 
 export interface ZodInvalidPasswordNoSpecial extends ZodIssueBase {
-  code: typeof ZodIssueCode.custom
-  params: {
-    isNestJsZod: true
-    code: 'invalid_password_no_special'
-  }
+	code: typeof ZodIssueCode.custom;
+	params: {
+		isNestJsZod: true;
+		code: "invalid_password_no_special";
+	};
 }
 
 export type ZodAnyPasswordIssue =
-  | ZodInvalidPasswordNoDigit
-  | ZodInvalidPasswordNoLowercase
-  | ZodInvalidPasswordNoUppercase
-  | ZodInvalidPasswordNoSpecial
+	| ZodInvalidPasswordNoDigit
+	| ZodInvalidPasswordNoLowercase
+	| ZodInvalidPasswordNoUppercase
+	| ZodInvalidPasswordNoSpecial;

@@ -3,6 +3,6 @@
  * so we just export Extended enum as it is
  */
 export enum ZodFirstPartyTypeKindExtended {
-  ZodDateString = 'ZodDateString',
-  ZodPassword = 'ZodPassword',
+	ZodDateString = "ZodDateString",
+	ZodPassword = "ZodPassword",
 }

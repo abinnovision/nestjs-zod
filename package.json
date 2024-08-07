@@ -38,7 +38,7 @@
 	],
 	"scripts": {
 		"build": "rollup -c",
-		"check": "yarn lint && yarn format:check && yarn sort:check",
+		"check": "yarn lint:check && yarn format:check && yarn sort:check",
 		"dev": "vite",
 		"fix": "yarn lint:fix && yarn format:fix && yarn sort:fix",
 		"format:check": "prettier --check 'src/**/*.{ts,js}' '**/*.{md,json,json5,yaml,yml}'",

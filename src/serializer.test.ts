@@ -1,76 +1,78 @@
-import { createMock } from '@golevelup/ts-jest'
-import { CallHandler, ExecutionContext } from '@nestjs/common'
-import { Reflector } from '@nestjs/core'
-import { lastValueFrom, of } from 'rxjs'
-import { z } from 'zod'
-import { createZodDto } from './dto'
-import { ZodSerializationException } from './exception'
-import { ZodSerializerInterceptor } from './serializer'
+import { createMock } from "@golevelup/ts-jest";
+import { lastValueFrom, of } from "rxjs";
+import { z } from "zod";
 
-describe('ZodSerializerInterceptor', () => {
-  const UserSchema = z.object({
-    username: z.string(),
-  })
+import { createZodDto } from "./dto";
+import { ZodSerializationException } from "./exception";
+import { ZodSerializerInterceptor } from "./serializer";
 
-  class UserDto extends createZodDto(UserSchema) {}
+import type { CallHandler, ExecutionContext } from "@nestjs/common";
+import type { Reflector } from "@nestjs/core";
 
-  const testUser = {
-    username: 'test',
-    password: 'test',
-  }
+describe("ZodSerializerInterceptor", () => {
+	const UserSchema = z.object({
+		username: z.string(),
+	});
 
-  const context = createMock<ExecutionContext>()
+	class UserDto extends createZodDto(UserSchema) {}
 
-  test('interceptor should strip out password', async () => {
-    const handler = createMock<CallHandler>({
-      handle: () => of(testUser),
-    })
+	const testUser = {
+		username: "test",
+		password: "test",
+	};
 
-    const reflector = createMock<Reflector>({
-      getAllAndOverride: () => UserDto,
-    })
+	const context = createMock<ExecutionContext>();
 
-    const interceptor = new ZodSerializerInterceptor(reflector)
+	test("interceptor should strip out password", async () => {
+		const handler = createMock<CallHandler>({
+			handle: () => of(testUser),
+		});
 
-    const userObservable = interceptor.intercept(context, handler)
-    const user: typeof testUser = await lastValueFrom(userObservable)
+		const reflector = createMock<Reflector>({
+			getAllAndOverride: () => UserDto,
+		});
 
-    expect(user.password).toBe(undefined)
-    expect(user.username).toBe('test')
-  })
+		const interceptor = new ZodSerializerInterceptor(reflector);
 
-  test('wrong response shape should throw ZodSerializationException', async () => {
-    const handler = createMock<CallHandler>({
-      handle: () => of({ user: 'test' }),
-    })
+		const userObservable = interceptor.intercept(context, handler);
+		const user: typeof testUser = await lastValueFrom(userObservable);
 
-    const reflector = createMock<Reflector>({
-      getAllAndOverride: () => UserDto,
-    })
+		expect(user.password).toBe(undefined);
+		expect(user.username).toBe("test");
+	});
 
-    const interceptor = new ZodSerializerInterceptor(reflector)
+	test("wrong response shape should throw ZodSerializationException", async () => {
+		const handler = createMock<CallHandler>({
+			handle: () => of({ user: "test" }),
+		});
 
-    const userObservable = interceptor.intercept(context, handler)
-    expect(lastValueFrom(userObservable)).rejects.toBeInstanceOf(
-      ZodSerializationException
-    )
-  })
+		const reflector = createMock<Reflector>({
+			getAllAndOverride: () => UserDto,
+		});
 
-  test('interceptor should not strip out password if no UserDto is defined', async () => {
-    const handler = createMock<CallHandler>({
-      handle: () => of(testUser),
-    })
+		const interceptor = new ZodSerializerInterceptor(reflector);
 
-    const reflector = createMock<Reflector>({
-      getAllAndOverride: jest.fn(),
-    })
+		const userObservable = interceptor.intercept(context, handler);
+		expect(lastValueFrom(userObservable)).rejects.toBeInstanceOf(
+			ZodSerializationException
+		);
+	});
 
-    const interceptor = new ZodSerializerInterceptor(reflector)
+	test("interceptor should not strip out password if no UserDto is defined", async () => {
+		const handler = createMock<CallHandler>({
+			handle: () => of(testUser),
+		});
 
-    const userObservable = interceptor.intercept(context, handler)
-    const user: typeof testUser = await lastValueFrom(userObservable)
+		const reflector = createMock<Reflector>({
+			getAllAndOverride: jest.fn(),
+		});
 
-    expect(user.password).toBe('test')
-    expect(user.username).toBe('test')
-  })
-})
+		const interceptor = new ZodSerializerInterceptor(reflector);
+
+		const userObservable = interceptor.intercept(context, handler);
+		const user: typeof testUser = await lastValueFrom(userObservable);
+
+		expect(user.password).toBe("test");
+		expect(user.username).toBe("test");
+	});
+});

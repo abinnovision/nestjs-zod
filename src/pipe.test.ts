@@ -1,61 +1,62 @@
-import { ArgumentMetadata } from '@nestjs/common'
-import { createZodDto } from './dto'
-import { ZodValidationException } from './exception'
-import { ZodValidationPipe } from './pipe'
-import { z } from './z'
+import { createZodDto } from "./dto";
+import { ZodValidationException } from "./exception";
+import { ZodValidationPipe } from "./pipe";
+import { z } from "./z";
 
-describe('ZodValidationPipe', () => {
-  const UserSchema = z.object({
-    username: z.string(),
-    password: z.string(),
-  })
+import type { ArgumentMetadata } from "@nestjs/common";
 
-  const UserDto = class Dto extends createZodDto(UserSchema) {}
+describe("ZodValidationPipe", () => {
+	const UserSchema = z.object({
+		username: z.string(),
+		password: z.string(),
+	});
 
-  it('should use manually passed Schema / DTO for validation', () => {
-    for (const schemaOrDto of [UserSchema, UserDto]) {
-      const pipe = new ZodValidationPipe(schemaOrDto)
+	const UserDto = class Dto extends createZodDto(UserSchema) {};
 
-      const valid = {
-        username: 'vasya',
-        password: '123',
-      }
+	it("should use manually passed Schema / DTO for validation", () => {
+		for (const schemaOrDto of [UserSchema, UserDto]) {
+			const pipe = new ZodValidationPipe(schemaOrDto);
 
-      const invalid = {
-        username: 'vasya',
-        password: 123,
-      }
+			const valid = {
+				username: "vasya",
+				password: "123",
+			};
 
-      const metadata: ArgumentMetadata = {
-        type: 'body',
-      }
+			const invalid = {
+				username: "vasya",
+				password: 123,
+			};
 
-      expect(pipe.transform(valid, metadata)).toEqual(valid)
-      expect(() => pipe.transform(invalid, metadata)).toThrowError()
-    }
-  })
+			const metadata: ArgumentMetadata = {
+				type: "body",
+			};
 
-  it('should use contextual Dto for validation', () => {
-    const pipe = new ZodValidationPipe()
+			expect(pipe.transform(valid, metadata)).toEqual(valid);
+			expect(() => pipe.transform(invalid, metadata)).toThrowError();
+		}
+	});
 
-    const valid = {
-      username: 'vasya',
-      password: '123',
-    }
+	it("should use contextual Dto for validation", () => {
+		const pipe = new ZodValidationPipe();
 
-    const invalid = {
-      username: 'vasya',
-      password: 123,
-    }
+		const valid = {
+			username: "vasya",
+			password: "123",
+		};
 
-    const metadata: ArgumentMetadata = {
-      type: 'body',
-      metatype: class Dto extends createZodDto(UserSchema) {},
-    }
+		const invalid = {
+			username: "vasya",
+			password: 123,
+		};
 
-    expect(pipe.transform(valid, metadata)).toEqual(valid)
-    expect(() => pipe.transform(invalid, metadata)).toThrowError(
-      ZodValidationException
-    )
-  })
-})
+		const metadata: ArgumentMetadata = {
+			type: "body",
+			metatype: class Dto extends createZodDto(UserSchema) {},
+		};
+
+		expect(pipe.transform(valid, metadata)).toEqual(valid);
+		expect(() => pipe.transform(invalid, metadata)).toThrowError(
+			ZodValidationException
+		);
+	});
+});

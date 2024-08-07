@@ -1,1 +1,1 @@
-export * from './exports/everything'
+export * from "./exports/everything";

@@ -1,50 +1,52 @@
-import { createMock } from '@golevelup/ts-jest'
-import { ExecutionContext } from '@nestjs/common'
-import { createZodDto } from './dto'
-import { ZodValidationException } from './exception'
-import { ZodGuard } from './guard'
-import { Source } from './shared/types'
-import { z } from './z'
+import { createMock } from "@golevelup/ts-jest";
 
-describe('ZodGuard', () => {
-  const UserSchema = z.object({
-    username: z.string(),
-    password: z.string(),
-  })
+import { createZodDto } from "./dto";
+import { ZodValidationException } from "./exception";
+import { ZodGuard } from "./guard";
+import { z } from "./z";
 
-  const UserDto = class Dto extends createZodDto(UserSchema) {}
+import type { Source } from "./shared/types";
+import type { ExecutionContext } from "@nestjs/common";
 
-  const contextMock = createMock<ExecutionContext>()
+describe("ZodGuard", () => {
+	const UserSchema = z.object({
+		username: z.string(),
+		password: z.string(),
+	});
 
-  function mockSource(source: Source, value: unknown) {
-    contextMock.switchToHttp().getRequest.mockReturnValue({ [source]: value })
-  }
+	const UserDto = class Dto extends createZodDto(UserSchema) {};
 
-  it('should work with any source and with Schema or DTO', () => {
-    const sources: Source[] = ['body', 'params', 'query']
+	const contextMock = createMock<ExecutionContext>();
 
-    for (const source of sources) {
-      for (const schemaOrDto of [UserSchema, UserDto]) {
-        const guard = new ZodGuard(source, schemaOrDto)
+	function mockSource(source: Source, value: unknown) {
+		contextMock.switchToHttp().getRequest.mockReturnValue({ [source]: value });
+	}
 
-        const valid = {
-          username: 'vasya',
-          password: '123',
-        }
+	it("should work with any source and with Schema or DTO", () => {
+		const sources: Source[] = ["body", "params", "query"];
 
-        const invalid = {
-          username: 'vasya',
-          password: 123,
-        }
+		for (const source of sources) {
+			for (const schemaOrDto of [UserSchema, UserDto]) {
+				const guard = new ZodGuard(source, schemaOrDto);
 
-        mockSource(source, valid)
-        expect(guard.canActivate(contextMock)).toBe(true)
+				const valid = {
+					username: "vasya",
+					password: "123",
+				};
 
-        mockSource(source, invalid)
-        expect(() => guard.canActivate(contextMock)).toThrowError(
-          ZodValidationException
-        )
-      }
-    }
-  })
-})
+				const invalid = {
+					username: "vasya",
+					password: 123,
+				};
+
+				mockSource(source, valid);
+				expect(guard.canActivate(contextMock)).toBe(true);
+
+				mockSource(source, invalid);
+				expect(() => guard.canActivate(contextMock)).toThrowError(
+					ZodValidationException
+				);
+			}
+		}
+	});
+});

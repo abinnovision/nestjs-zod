@@ -1,156 +1,157 @@
-import { SafeParseReturnType, ZodSchema } from 'zod'
-import { dateString } from './date-string'
+import { dateString } from "./date-string";
 
-describe('dateString', () => {
-  let schema: ZodSchema
-  let result: SafeParseReturnType<unknown, unknown>
+import type { SafeParseReturnType, ZodSchema } from "zod";
 
-  function is(value: unknown, expected: boolean) {
-    result = schema.safeParse(value)
-    expect(result.success).toBe(expected)
-    if (!result.success) {
-      expect(result.error.errors).toMatchSnapshot()
-    }
-  }
+describe("dateString", () => {
+	let schema: ZodSchema;
+	let result: SafeParseReturnType<unknown, unknown>;
 
-  it('should validate type', () => {
-    schema = dateString()
-    is(undefined, false)
-    is(123, false)
-  })
+	function is(value: unknown, expected: boolean) {
+		result = schema.safeParse(value);
+		expect(result.success).toBe(expected);
+		if (!result.success) {
+			expect(result.error.errors).toMatchSnapshot();
+		}
+	}
 
-  it('should validate date', () => {
-    schema = dateString()
-    is('', false)
-  })
+	it("should validate type", () => {
+		schema = dateString();
+		is(undefined, false);
+		is(123, false);
+	});
 
-  it('should validate default format', () => {
-    schema = dateString()
-    is('2017-08-20', false)
-  })
+	it("should validate date", () => {
+		schema = dateString();
+		is("", false);
+	});
 
-  it('should validate specified format', () => {
-    schema = dateString().format('date')
-    is('2017-08-20', true)
+	it("should validate default format", () => {
+		schema = dateString();
+		is("2017-08-20", false);
+	});
 
-    schema = dateString().format('date')
-    is('2017-08-20T20:00:00Z', false)
+	it("should validate specified format", () => {
+		schema = dateString().format("date");
+		is("2017-08-20", true);
 
-    schema = dateString().format('date-time')
-    is('2017-08-20T20:00:00Z', true)
+		schema = dateString().format("date");
+		is("2017-08-20T20:00:00Z", false);
 
-    schema = dateString().format('date-time')
-    is('2017-08-20', false)
-  })
+		schema = dateString().format("date-time");
+		is("2017-08-20T20:00:00Z", true);
 
-  test('format should override previous format', () => {
-    schema = dateString().format('date').format('date-time').format('date')
-    is('2017-08-20', true)
-  })
+		schema = dateString().format("date-time");
+		is("2017-08-20", false);
+	});
 
-  it('should accept all date-time variations', () => {
-    schema = dateString().format('date-time')
+	test("format should override previous format", () => {
+		schema = dateString().format("date").format("date-time").format("date");
+		is("2017-08-20", true);
+	});
 
-    is('2017-08-20T20:00:00Z', true)
-    is('2017-08-20T20:00:00.000Z', true)
-    is('2017-08-20T20:00:00+00:00', true)
-    is('2017-08-20T20:00:00-00:00', true)
-    is('2017-08-20T20:00:00.000+00:00', true)
-    is('2017-08-20T20:00:00.000-00:00', true)
-  })
+	it("should accept all date-time variations", () => {
+		schema = dateString().format("date-time");
 
-  const past = '2017-08-20T20:00:00Z'
-  const future = '2322-08-20T20:00:00Z'
+		is("2017-08-20T20:00:00Z", true);
+		is("2017-08-20T20:00:00.000Z", true);
+		is("2017-08-20T20:00:00+00:00", true);
+		is("2017-08-20T20:00:00-00:00", true);
+		is("2017-08-20T20:00:00.000+00:00", true);
+		is("2017-08-20T20:00:00.000-00:00", true);
+	});
 
-  it('should validate direction', () => {
-    schema = dateString().past()
+	const past = "2017-08-20T20:00:00Z";
+	const future = "2322-08-20T20:00:00Z";
 
-    is(past, true)
-    is(future, false)
+	it("should validate direction", () => {
+		schema = dateString().past();
 
-    schema = dateString().future()
+		is(past, true);
+		is(future, false);
 
-    is(future, true)
-    is(past, false)
-  })
+		schema = dateString().future();
 
-  test('direction should override previous direction', () => {
-    schema = dateString().past().future().past()
-    is(past, true)
-  })
+		is(future, true);
+		is(past, false);
+	});
 
-  const small = '1998-08-20T20:00:00Z'
-  const middle = '2022-08-20T20:00:00Z'
-  const big = '2322-08-20T20:00:00Z'
+	test("direction should override previous direction", () => {
+		schema = dateString().past().future().past();
+		is(past, true);
+	});
 
-  it('should validate min/max year', () => {
-    schema = dateString().minYear(2000).maxYear(2100)
+	const small = "1998-08-20T20:00:00Z";
+	const middle = "2022-08-20T20:00:00Z";
+	const big = "2322-08-20T20:00:00Z";
 
-    is(small, false)
-    is(middle, true)
-    is(big, false)
-  })
+	it("should validate min/max year", () => {
+		schema = dateString().minYear(2000).maxYear(2100);
 
-  test('min/max should override previous min/max', () => {
-    schema = dateString()
-      .minYear(2000)
-      .maxYear(2100)
-      .minYear(1800)
-      .maxYear(2400)
+		is(small, false);
+		is(middle, true);
+		is(big, false);
+	});
 
-    is(small, true)
-    is(middle, true)
-    is(big, true)
-  })
+	test("min/max should override previous min/max", () => {
+		schema = dateString()
+			.minYear(2000)
+			.maxYear(2100)
+			.minYear(1800)
+			.maxYear(2400);
 
-  it('should validate min and max edge cases', () => {
-    schema = dateString().format('date').minYear(2000).maxYear(2100)
+		is(small, true);
+		is(middle, true);
+		is(big, true);
+	});
 
-    is('2000-08-20', true)
-    is('2100-08-20', true)
-  })
+	it("should validate min and max edge cases", () => {
+		schema = dateString().format("date").minYear(2000).maxYear(2100);
 
-  it('should validate week days', () => {
-    schema = dateString().format('date').weekDay()
+		is("2000-08-20", true);
+		is("2100-08-20", true);
+	});
 
-    is('2022-05-09', true)
-    is('2022-05-10', true)
-    is('2022-05-11', true)
-    is('2022-05-12', true)
-    is('2022-05-13', true)
-    is('2022-05-14', false)
-    is('2022-05-15', false)
+	it("should validate week days", () => {
+		schema = dateString().format("date").weekDay();
 
-    schema = dateString().format('date').weekend()
+		is("2022-05-09", true);
+		is("2022-05-10", true);
+		is("2022-05-11", true);
+		is("2022-05-12", true);
+		is("2022-05-13", true);
+		is("2022-05-14", false);
+		is("2022-05-15", false);
 
-    is('2022-05-09', false)
-    is('2022-05-10', false)
-    is('2022-05-11', false)
-    is('2022-05-12', false)
-    is('2022-05-13', false)
-    is('2022-05-14', true)
-    is('2022-05-15', true)
-  })
+		schema = dateString().format("date").weekend();
 
-  test('day-type should override previous day-type', () => {
-    schema = dateString().format('date').weekDay().weekend()
+		is("2022-05-09", false);
+		is("2022-05-10", false);
+		is("2022-05-11", false);
+		is("2022-05-12", false);
+		is("2022-05-13", false);
+		is("2022-05-14", true);
+		is("2022-05-15", true);
+	});
 
-    is('2022-05-09', false)
-    is('2022-05-10', false)
-    is('2022-05-11', false)
-    is('2022-05-12', false)
-    is('2022-05-13', false)
-    is('2022-05-14', true)
-    is('2022-05-15', true)
-  })
+	test("day-type should override previous day-type", () => {
+		schema = dateString().format("date").weekDay().weekend();
 
-  it('should cast to Date when .cast is used', () => {
-    schema = dateString().cast()
+		is("2022-05-09", false);
+		is("2022-05-10", false);
+		is("2022-05-11", false);
+		is("2022-05-12", false);
+		is("2022-05-13", false);
+		is("2022-05-14", true);
+		is("2022-05-15", true);
+	});
 
-    const string = '2017-08-20T20:00:00Z'
-    is(string, true)
-    result = schema.safeParse(string)
-    if (!result.success) return
-    expect(result.data).toBeInstanceOf(Date)
-  })
-})
+	it("should cast to Date when .cast is used", () => {
+		schema = dateString().cast();
+
+		const string = "2017-08-20T20:00:00Z";
+		is(string, true);
+		result = schema.safeParse(string);
+		if (!result.success) return;
+		expect(result.data).toBeInstanceOf(Date);
+	});
+});

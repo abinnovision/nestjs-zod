@@ -1,40 +1,44 @@
-import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common'
-import { isZodDto, ZodDto } from './dto'
-import { ZodExceptionCreator } from './exception'
-import { validate } from './validate'
-import { ZodSchema } from './z'
+import { Injectable } from "@nestjs/common";
+
+import { isZodDto } from "./dto";
+import { validate } from "./validate";
+
+import type { ZodDto } from "./dto";
+import type { ZodExceptionCreator } from "./exception";
+import type { ZodSchema } from "./z";
+import type { ArgumentMetadata, PipeTransform } from "@nestjs/common";
 
 interface ZodValidationPipeOptions {
-  createValidationException?: ZodExceptionCreator
+	createValidationException?: ZodExceptionCreator;
 }
 
 type ZodValidationPipeClass = new (
-  schemaOrDto?: ZodSchema | ZodDto
-) => PipeTransform
+	schemaOrDto?: ZodSchema | ZodDto
+) => PipeTransform;
 
 export function createZodValidationPipe({
-  createValidationException,
+	createValidationException,
 }: ZodValidationPipeOptions = {}): ZodValidationPipeClass {
-  @Injectable()
-  class ZodValidationPipe implements PipeTransform {
-    constructor(private schemaOrDto?: ZodSchema | ZodDto) {}
+	@Injectable()
+	class ZodValidationPipe implements PipeTransform {
+		public constructor(private schemaOrDto?: ZodSchema | ZodDto) {}
 
-    public transform(value: unknown, metadata: ArgumentMetadata) {
-      if (this.schemaOrDto) {
-        return validate(value, this.schemaOrDto, createValidationException)
-      }
+		public transform(value: unknown, metadata: ArgumentMetadata) {
+			if (this.schemaOrDto) {
+				return validate(value, this.schemaOrDto, createValidationException);
+			}
 
-      const { metatype } = metadata
+			const { metatype } = metadata;
 
-      if (!isZodDto(metatype)) {
-        return value
-      }
+			if (!isZodDto(metatype)) {
+				return value;
+			}
 
-      return validate(value, metatype.schema, createValidationException)
-    }
-  }
+			return validate(value, metatype.schema, createValidationException);
+		}
+	}
 
-  return ZodValidationPipe
+	return ZodValidationPipe;
 }
 
-export const ZodValidationPipe = createZodValidationPipe()
+export const ZodValidationPipe = createZodValidationPipe();

@@ -30,11 +30,13 @@ Forked from [risen228/nestjs-zod](https://github.com/risen228/nestjs-zod)
 ## Installation
 
 Configure the GitHub Package Registry:
+
 ```
 https://npm.pkg.github.com
 ```
 
 Install the package:
+
 ```
 yarn add @abinnovision/nestjs-zod zod
 ```
@@ -80,30 +82,30 @@ Extended Zod and Swagger integration are bound to the internal API, so even the 
 For that reason, `nestjs-zod` uses specific `zod` version inside and re-exports it under `/z` scope:
 
 ```ts
-import { z, ZodString, ZodError } from 'nestjs-zod/z'
+import { z, ZodString, ZodError } from "nestjs-zod/z";
 
 const CredentialsSchema = z.object({
-  username: z.string(),
-  password: z.string(),
-})
+	username: z.string(),
+	password: z.string(),
+});
 ```
 
 Zod's classes and types are re-exported too, but under `/z` scope for more clarity:
 
 ```ts
-import { ZodString, ZodError, ZodIssue } from 'nestjs-zod/z'
+import { ZodString, ZodError, ZodIssue } from "nestjs-zod/z";
 ```
 
 ## Creating DTO from Zod schema
 
 ```ts
-import { createZodDto } from 'nestjs-zod'
-import { z } from 'nestjs-zod/z'
+import { createZodDto } from "nestjs-zod";
+import { z } from "nestjs-zod/z";
 
 const CredentialsSchema = z.object({
-  username: z.string(),
-  password: z.string(),
-})
+	username: z.string(),
+	password: z.string(),
+});
 
 // class is required for using DTO as a type
 class CredentialsDto extends createZodDto(CredentialsSchema) {}
@@ -117,30 +119,30 @@ DTO does two things:
 - Provides a type from Zod schema for you
 
 ```ts
-@Controller('auth')
+@Controller("auth")
 class AuthController {
-  // with global ZodValidationPipe (recommended)
-  async signIn(@Body() credentials: CredentialsDto) {}
-  async signIn(@Param() signInParams: SignInParamsDto) {}
-  async signIn(@Query() signInQuery: SignInQueryDto) {}
+	// with global ZodValidationPipe (recommended)
+	async signIn(@Body() credentials: CredentialsDto) {}
+	async signIn(@Param() signInParams: SignInParamsDto) {}
+	async signIn(@Query() signInQuery: SignInQueryDto) {}
 
-  // with route-level ZodValidationPipe
-  @UsePipes(ZodValidationPipe)
-  async signIn(@Body() credentials: CredentialsDto) {}
+	// with route-level ZodValidationPipe
+	@UsePipes(ZodValidationPipe)
+	async signIn(@Body() credentials: CredentialsDto) {}
 }
 
 // with controller-level ZodValidationPipe
 @UsePipes(ZodValidationPipe)
-@Controller('auth')
+@Controller("auth")
 class AuthController {
-  async signIn(@Body() credentials: CredentialsDto) {}
+	async signIn(@Body() credentials: CredentialsDto) {}
 }
 ```
 
 ### Using standalone (without server-side dependencies)
 
 ```ts
-import { createZodDto } from 'nestjs-zod/dto'
+import { createZodDto } from "nestjs-zod/dto";
 ```
 
 ## Using ZodValidationPipe
@@ -152,16 +154,16 @@ When the data is invalid - it throws [ZodValidationException](#validation-except
 ### Globally (recommended)
 
 ```ts
-import { ZodValidationPipe } from 'nestjs-zod'
-import { APP_PIPE } from '@nestjs/core'
+import { ZodValidationPipe } from "nestjs-zod";
+import { APP_PIPE } from "@nestjs/core";
 
 @Module({
-  providers: [
-    {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
-    },
-  ],
+	providers: [
+		{
+			provide: APP_PIPE,
+			useClass: ZodValidationPipe,
+		},
+	],
 })
 export class AppModule {}
 ```
@@ -169,24 +171,24 @@ export class AppModule {}
 ### Locally
 
 ```ts
-import { ZodValidationPipe } from 'nestjs-zod'
+import { ZodValidationPipe } from "nestjs-zod";
 
 // controller-level
 @UsePipes(ZodValidationPipe)
 class AuthController {}
 
 class AuthController {
-  // route-level
-  @UsePipes(ZodValidationPipe)
-  async signIn() {}
+	// route-level
+	@UsePipes(ZodValidationPipe)
+	async signIn() {}
 }
 ```
 
 Also, you can instantly pass a Schema or DTO:
 
 ```ts
-import { ZodValidationPipe } from 'nestjs-zod'
-import { UserDto, UserSchema } from './auth.contracts'
+import { ZodValidationPipe } from "nestjs-zod";
+import { UserDto, UserSchema } from "./auth.contracts";
 
 // using schema
 @UsePipes(new ZodValidationPipe(UserSchema))
@@ -195,21 +197,21 @@ import { UserDto, UserSchema } from './auth.contracts'
 class AuthController {}
 
 class AuthController {
-  // the same applies to route-level
-  async signIn() {}
+	// the same applies to route-level
+	async signIn() {}
 }
 ```
 
 ### Creating custom validation pipe
 
 ```ts
-import { createZodValidationPipe } from 'nestjs-zod'
+import { createZodValidationPipe } from "nestjs-zod";
 
 const MyZodValidationPipe = createZodValidationPipe({
-  // provide custom validation exception factory
-  createValidationException: (error: ZodError) =>
-    new BadRequestException('Ooops'),
-})
+	// provide custom validation exception factory
+	createValidationException: (error: ZodError) =>
+		new BadRequestException("Ooops"),
+});
 ```
 
 ## Using ZodGuard
@@ -231,31 +233,31 @@ Parameters:
 When the data is invalid - it throws [ZodValidationException](#validation-exceptions).
 
 ```ts
-import { ZodGuard } from 'nestjs-zod'
+import { ZodGuard } from "nestjs-zod";
 
 // controller-level
-@UseZodGuard('body', CredentialsSchema)
-@UseZodGuard('params', CredentialsDto)
+@UseZodGuard("body", CredentialsSchema)
+@UseZodGuard("params", CredentialsDto)
 class MyController {}
 
 class MyController {
-  // route-level
-  @UseZodGuard('query', CredentialsSchema)
-  @UseZodGuard('body', CredentialsDto)
-  async signIn() {}
+	// route-level
+	@UseZodGuard("query", CredentialsSchema)
+	@UseZodGuard("body", CredentialsDto)
+	async signIn() {}
 }
 ```
 
 ### Creating custom guard
 
 ```ts
-import { createZodGuard } from 'nestjs-zod'
+import { createZodGuard } from "nestjs-zod";
 
 const MyZodGuard = createZodGuard({
-  // provide custom validation exception factory
-  createValidationException: (error: ZodError) =>
-    new BadRequestException('Ooops'),
-})
+	// provide custom validation exception factory
+	createValidationException: (error: ZodError) =>
+		new BadRequestException("Ooops"),
+});
 ```
 
 ## Create validation from scratch
@@ -263,15 +265,15 @@ const MyZodGuard = createZodGuard({
 If you don't like `ZodGuard` and `ZodValidationPipe`, you can use `validate` function:
 
 ```ts
-import { validate } from 'nestjs-zod'
+import { validate } from "nestjs-zod";
 
-validate(wrongThing, UserDto, (zodError) => new MyException(zodError)) // throws MyException
+validate(wrongThing, UserDto, (zodError) => new MyException(zodError)); // throws MyException
 
 const validatedUser = validate(
-  user,
-  UserDto,
-  (zodError) => new MyException(zodError)
-) // returns typed value when succeed
+	user,
+	UserDto,
+	(zodError) => new MyException(zodError)
+); // returns typed value when succeed
 ```
 
 ## Validation Exceptions
@@ -280,18 +282,18 @@ The default server response on validation error looks like that:
 
 ```json
 {
-  "statusCode": 400,
-  "message": "Validation failed",
-  "errors": [
-    {
-      "code": "too_small",
-      "minimum": 8,
-      "type": "string",
-      "inclusive": true,
-      "message": "String must contain at least 8 character(s)",
-      "path": ["password"]
-    }
-  ]
+	"statusCode": 400,
+	"message": "Validation failed",
+	"errors": [
+		{
+			"code": "too_small",
+			"minimum": 8,
+			"type": "string",
+			"inclusive": true,
+			"message": "String must contain at least 8 character(s)",
+			"path": ["password"]
+		}
+	]
 }
 ```
 
@@ -305,7 +307,7 @@ You can customize the exception by creating custom `nestjs-zod` entities using t
 You can create `ZodValidationException` manually by providing `ZodError`:
 
 ```ts
-const exception = new ZodValidationException(error)
+const exception = new ZodValidationException(error);
 ```
 
 Also, `ZodValidationException` has an additional API for better usage in NestJS Exception Filters:
@@ -313,9 +315,9 @@ Also, `ZodValidationException` has an additional API for better usage in NestJS 
 ```ts
 @Catch(ZodValidationException)
 export class ZodValidationExceptionFilter implements ExceptionFilter {
-  catch(exception: ZodValidationException) {
-    exception.getZodError() // -> ZodError
-  }
+	catch(exception: ZodValidationException) {
+		exception.getZodError(); // -> ZodError
+	}
 }
 ```
 
@@ -343,20 +345,20 @@ export class AppModule {}
 ### Use `@ZodSerializerDto` to define the shape of the response for endpoint in controller
 
 ```ts
-const UserSchema = z.object({ username: string() })
+const UserSchema = z.object({ username: string() });
 
 export class UserDto extends createZodDto(UserSchema) {}
 ```
 
 ```ts
-@Controller('user')
+@Controller("user")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+	constructor(private readonly userService: UserService) {}
 
-  @ZodSerializerDto(UserDto)
-  getUser(id: number) {
-    return this.userService.findOne(id) // --> The native service method returns { username: string, password: string by default }
-  }
+	@ZodSerializerDto(UserDto)
+	getUser(id: number) {
+		return this.userService.findOne(id); // --> The native service method returns { username: string, password: string by default }
+	}
 }
 ```
 
@@ -373,36 +375,36 @@ In HTTP, we always accept Dates as strings. But default Zod only has validations
 ```ts
 // 1. Expect user input to be a "string" type
 // 2. Expect user input to be a valid date (by using new Date)
-z.dateString()
+z.dateString();
 
 // Cast to Date instance
 // (use it on end of the chain, but before "describe")
-z.dateString().cast()
+z.dateString().cast();
 
 // Expect string in "full-date" format from RFC3339
-z.dateString().format('date')
+z.dateString().format("date");
 
 // [default format]
 // Expect string in "date-time" format from RFC3339
-z.dateString().format('date-time')
+z.dateString().format("date-time");
 
 // Expect date to be the past
-z.dateString().past()
+z.dateString().past();
 
 // Expect date to be the future
-z.dateString().future()
+z.dateString().future();
 
 // Expect year to be greater or equal to 2000
-z.dateString().minYear(2000)
+z.dateString().minYear(2000);
 
 // Expect year to be less or equal to 2025
-z.dateString().maxYear(2025)
+z.dateString().maxYear(2025);
 
 // Expect day to be a week day
-z.dateString().weekDay()
+z.dateString().weekDay();
 
 // Expect year to be a weekend
-z.dateString().weekend()
+z.dateString().weekend();
 ```
 
 Valid `date` format examples:
@@ -450,25 +452,25 @@ Also, `ZodPassword` has a more accurate OpenAPI conversion, comparing to regular
 
 ```ts
 // Expect user input to be a "string" type
-z.password()
+z.password();
 
 // Expect password length to be greater or equal to 8
-z.password().min(8)
+z.password().min(8);
 
 // Expect password length to be less or equal to 100
-z.password().max(100)
+z.password().max(100);
 
 // Expect password to have at least one digit
-z.password().atLeastOne('digit')
+z.password().atLeastOne("digit");
 
 // Expect password to have at least one lowercase letter
-z.password().atLeastOne('lowercase')
+z.password().atLeastOne("lowercase");
 
 // Expect password to have at least one uppercase letter
-z.password().atLeastOne('uppercase')
+z.password().atLeastOne("uppercase");
 
 // Expect password to have at least one special symbol
-z.password().atLeastOne('special')
+z.password().atLeastOne("special");
 ```
 
 Errors:
@@ -485,7 +487,7 @@ Errors:
 > Created for `nestjs-zod-prisma`
 
 ```ts
-z.json()
+z.json();
 ```
 
 ### "from" function
@@ -495,7 +497,7 @@ z.json()
 Just returns the same Schema
 
 ```ts
-z.from(MySchema)
+z.from(MySchema);
 ```
 
 ### Extended Zod Errors
@@ -506,17 +508,17 @@ Therefore, the error details is located inside `params` property:
 
 ```ts
 const error = {
-  code: 'custom',
-  message: 'Invalid date, expected it to be the past',
-  params: {
-    isNestJsZod: true,
-    code: 'invalid_date_string_direction',
+	code: "custom",
+	message: "Invalid date, expected it to be the past",
+	params: {
+		isNestJsZod: true,
+		code: "invalid_date_string_direction",
 
-    // payload is always located here in a flat view
-    expected: 'past',
-  },
-  path: ['date'],
-}
+		// payload is always located here in a flat view
+		expected: "past",
+	},
+	path: ["date"],
+};
 ```
 
 ### Working with errors on the client side
@@ -526,14 +528,18 @@ Optionally, you can install `nestjs-zod` on the client side.
 The library provides you a `/frontend` scope, that can be used to detect custom NestJS Zod issues and process them the way you want.
 
 ```ts
-import { isNestJsZodIssue, NestJsZodIssue, ZodIssue } from 'nestjs-zod/frontend'
+import {
+	isNestJsZodIssue,
+	NestJsZodIssue,
+	ZodIssue,
+} from "nestjs-zod/frontend";
 
 function mapToFormErrors(issues: ZodIssue[]) {
-  for (const issue of issues) {
-    if (isNestJsZodIssue(issue)) {
-      // issue is NestJsZodIssue
-    }
-  }
+	for (const issue of issues) {
+		if (isNestJsZodIssue(issue)) {
+			// issue is NestJsZodIssue
+		}
+	}
 }
 ```
 
@@ -550,9 +556,9 @@ Prerequisites:
 Apply a patch:
 
 ```ts
-import { patchNestJsSwagger } from 'nestjs-zod'
+import { patchNestJsSwagger } from "nestjs-zod";
 
-patchNestJsSwagger()
+patchNestJsSwagger();
 ```
 
 Then follow the [Nest.js' Swagger Module Guide](https://docs.nestjs.com/openapi/introduction).
@@ -562,12 +568,12 @@ Then follow the [Nest.js' Swagger Module Guide](https://docs.nestjs.com/openapi/
 Use `.describe()` method to add Swagger description:
 
 ```ts
-import { z } from 'nestjs-zod/z'
+import { z } from "nestjs-zod/z";
 
 const CredentialsSchema = z.object({
-  username: z.string().describe('This is an username'),
-  password: z.string().describe('This is a password'),
-})
+	username: z.string().describe("This is an username"),
+	password: z.string().describe("This is a password"),
+});
 ```
 
 ### Using zodToOpenAPI
@@ -575,56 +581,56 @@ const CredentialsSchema = z.object({
 You can convert any Zod schema to an OpenAPI JSON object:
 
 ```ts
-import { zodToOpenAPI } from 'nestjs-zod'
-import { z } from 'nestjs-zod/z'
+import { zodToOpenAPI } from "nestjs-zod";
+import { z } from "nestjs-zod/z";
 
 const SignUpSchema = z.object({
-  username: z.string().min(8).max(20),
-  password: z.string().min(8).max(20),
-  sex: z
-    .enum(['male', 'female', 'nonbinary'])
-    .describe('We respect your gender choice'),
-  social: z.record(z.string().url()),
-  birthDate: z.dateString().past(),
-})
+	username: z.string().min(8).max(20),
+	password: z.string().min(8).max(20),
+	sex: z
+		.enum(["male", "female", "nonbinary"])
+		.describe("We respect your gender choice"),
+	social: z.record(z.string().url()),
+	birthDate: z.dateString().past(),
+});
 
-const openapi = zodToOpenAPI(SignUpSchema)
+const openapi = zodToOpenAPI(SignUpSchema);
 ```
 
 The output will be the following:
 
 ```json
 {
-  "type": "object",
-  "properties": {
-    "username": {
-      "type": "string",
-      "minLength": 8,
-      "maxLength": 20
-    },
-    "password": {
-      "type": "string",
-      "minLength": 8,
-      "maxLength": 20
-    },
-    "sex": {
-      "description": "We respect your gender choice",
-      "type": "string",
-      "enum": ["male", "female", "nonbinary"]
-    },
-    "social": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "string",
-        "format": "uri"
-      }
-    },
-    "birthDate": {
-      "type": "string",
-      "format": "date-time"
-    }
-  },
-  "required": ["username", "password", "sex", "social", "birthDate"]
+	"type": "object",
+	"properties": {
+		"username": {
+			"type": "string",
+			"minLength": 8,
+			"maxLength": 20
+		},
+		"password": {
+			"type": "string",
+			"minLength": 8,
+			"maxLength": 20
+		},
+		"sex": {
+			"description": "We respect your gender choice",
+			"type": "string",
+			"enum": ["male", "female", "nonbinary"]
+		},
+		"social": {
+			"type": "object",
+			"additionalProperties": {
+				"type": "string",
+				"format": "uri"
+			}
+		},
+		"birthDate": {
+			"type": "string",
+			"format": "date-time"
+		}
+	},
+	"required": ["username", "password", "sex", "social", "birthDate"]
 }
 ```
 

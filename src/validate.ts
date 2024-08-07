@@ -1,23 +1,26 @@
-import { ZodSchema, ZodTypeDef } from 'zod'
-import { isZodDto, ZodDto } from './dto'
-import { createZodValidationException, ZodExceptionCreator } from './exception'
+import { isZodDto } from "./dto";
+import { createZodValidationException } from "./exception";
+
+import type { ZodDto } from "./dto";
+import type { ZodExceptionCreator } from "./exception";
+import type { ZodSchema, ZodTypeDef } from "zod";
 
 export function validate<
-  TOutput = any, // eslint-disable-line @typescript-eslint/no-explicit-any
-  TDef extends ZodTypeDef = ZodTypeDef,
-  TInput = TOutput
+	TOutput = any,
+	TDef extends ZodTypeDef = ZodTypeDef,
+	TInput = TOutput,
 >(
-  value: unknown,
-  schemaOrDto: ZodSchema<TOutput, TDef, TInput> | ZodDto<TOutput, TDef, TInput>,
-  createValidationException: ZodExceptionCreator = createZodValidationException
+	value: unknown,
+	schemaOrDto: ZodSchema<TOutput, TDef, TInput> | ZodDto<TOutput, TDef, TInput>,
+	createValidationException: ZodExceptionCreator = createZodValidationException
 ) {
-  const schema = isZodDto(schemaOrDto) ? schemaOrDto.schema : schemaOrDto
+	const schema = isZodDto(schemaOrDto) ? schemaOrDto.schema : schemaOrDto;
 
-  const result = schema.safeParse(value)
+	const result = schema.safeParse(value);
 
-  if (!result.success) {
-    throw createValidationException(result.error)
-  }
+	if (!result.success) {
+		throw createValidationException(result.error);
+	}
 
-  return result.data
+	return result.data;
 }
