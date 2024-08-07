@@ -1,5 +1,4 @@
-> [!CAUTION]
-> I had to deprecate this package because I don't have enough time to support it, and moreover, I stopped using Nest. Sorry for the inconvenience caused.
+Forked from [risen228/nestjs-zod](https://github.com/risen228/nestjs-zod)
 
 <p align="center">
   <img src="logo.svg" width="560px" align="center" alt="NestJS + Zod logo" style="max-width: 100%;" />
@@ -8,28 +7,6 @@
     ✨ A superior validation solution for your NestJS application ✨
   </p>
 </p>
-<br/>
-<p align="center">
-  <a href="https://github.com/risenforces/nestjs-zod/actions?query=branch%3Amain">
-    <img src="https://github.com/risenforces/nestjs-zod/actions/workflows/test-and-build.yml/badge.svg?event=push&branch=main" alt="nestjs-zod CI Status" />
-  </a>
-  <a href="https://opensource.org/licenses/MIT" rel="nofollow">
-    <img src="https://img.shields.io/github/license/risenforces/nestjs-zod" alt="License">
-  </a>
-  <a href="https://www.npmjs.com/package/nestjs-zod" rel="nofollow">
-    <img src="https://img.shields.io/npm/dw/nestjs-zod.svg" alt="npm">
-  </a>
-  <a href="https://www.npmjs.com/package/nestjs-zod" rel="nofollow">
-    <img src="https://img.shields.io/github/stars/risenforces/nestjs-zod" alt="stars">
-  </a>
-</p>
-
-## Ecosystem
-
-| Package                                                               | About                                                    |
-| :-------------------------------------------------------------------- | :------------------------------------------------------- |
-| [nestjs-zod](https://github.com/risenforces/nestjs-zod)               | A tools for integrating Zod into your NestJS application |
-| [nestjs-zod-prisma](https://github.com/risenforces/nestjs-zod-prisma) | Generate Zod schemas from your Prisma schema             |
 
 ## Core library features
 
@@ -52,8 +29,14 @@
 
 ## Installation
 
+Configure the GitHub Package Registry:
 ```
-yarn add nestjs-zod zod
+https://npm.pkg.github.com
+```
+
+Install the package:
+```
+yarn add @abinnovision/nestjs-zod zod
 ```
 
 Peer dependencies:
@@ -653,3 +636,6 @@ The output will be the following:
 - [zod-nestjs](https://github.com/anatine/zod-plugins/tree/main/libs/zod-nestjs) and [zod-openapi](https://github.com/anatine/zod-plugins/tree/main/libs/zod-openapi)  
   These libraries bring some new features compared to `zod-dto`.  
   `nestjs-zod` has used them too.
+
+- [risen228/nestjs-zod](https://github.com/risen228/nestjs-zod)  
+  Original repository by `risen228`
