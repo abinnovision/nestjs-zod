@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-zod",
+  "name": "@abinnovision/nestjs-zod",
   "description": "All NestJS + Zod utilities you need",
   "version": "0.0.0-set-by-ci",
   "main": "./dist/index.js",
@@ -28,10 +28,16 @@
   ],
   "sideEffects": false,
   "license": "MIT",
-  "repository": "git@github.com:risenforces/nestjs-zod.git",
-  "author": "Evgeny Zakharov <to@risen.dev>",
+  "repository": {
+    "url": "https://github.com/abinnovision/nestjs-zod"
+  },
+  "author": {
+		"name": "AB INNOVISION GmbH",
+		"email": "info@abinnovision.com",
+		"url": "https://abinnovision.com/"
+	},
   "publishConfig": {
-    "access": "public"
+    "registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "dev": "vite",
