@@ -6,6 +6,6 @@ max_line_length = 80
 indent_size = 1
 tab_width = 2
 
-[*.yml,*.yaml]
+[*.{yml,yaml}]
 indent_size = 2
 indent_style = space
